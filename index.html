@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aerospace Career Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0d0d12;--surface:#13131a;--surface2:#1a1a24;--surface3:#22222e;
+  --border:#2a2a38;--border2:#363648;
+  --accent:#6ee7b7;--accent2:#60a5fa;
+  --text:#e2e8f0;--text2:#94a3b8;--text3:#64748b;
+  --green:#22c55e;--yellow:#eab308;--red:#ef4444;--blue:#3b82f6;
+  --green-bg:rgba(34,197,94,.1);--yellow-bg:rgba(234,179,8,.1);
+  --red-bg:rgba(239,68,68,.1);--blue-bg:rgba(59,130,246,.1);
+  --r:8px;--rl:12px;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.5;}
+a{color:var(--accent2);text-decoration:none;}
+/* layout */
+.app{display:flex;height:100vh;overflow:hidden;}
+.sidebar{width:216px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+/* sidebar */
+.logo{padding:18px 16px 12px;border-bottom:1px solid var(--border);}
+.logo-title{font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.nav{flex:1;padding:8px;overflow-y:auto;}
+.ni{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r);cursor:pointer;color:var(--text2);font-size:13px;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;transition:all .15s;}
+.ni:hover{background:var(--surface2);color:var(--text);}
+.ni.on{background:var(--surface3);color:var(--text);font-weight:500;}
+.ni svg{width:15px;height:15px;flex-shrink:0;}
+.sf{padding:10px 14px;border-top:1px solid var(--border);font-size:11px;color:var(--text3);}
+/* topbar */
+.topbar{padding:12px 22px;border-bottom:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.topbar-title{font-size:15px;font-weight:600;}
+/* content */
+.content{flex:1;overflow-y:auto;padding:22px;}
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--rl);padding:18px;margin-bottom:14px;}
+.card-sm{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px;margin-bottom:8px;}
+.sl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:10px;display:block;}
+/* forms */
+label.lb{display:block;font-size:12px;color:var(--text2);margin-bottom:3px;}
+input,textarea,select{display:block;width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:7px 11px;outline:none;transition:border-color .15s;margin-bottom:10px;}
+input:focus,textarea:focus,select:focus{border-color:var(--accent2);}
+textarea{resize:vertical;line-height:1.6;}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s;font-weight:500;}
+.btn:hover{border-color:var(--accent2);color:var(--accent2);}
+.btn:active{transform:scale(.98);}
+.btn-p{background:var(--accent);border-color:var(--accent);color:#0d0d12;font-weight:600;}
+.btn-p:hover{background:#a7f3d0;border-color:#a7f3d0;color:#0d0d12;}
+.btn-sm{padding:5px 9px;font-size:12px;}
+.btn-d{border-color:var(--red);color:var(--red);}
+.btn-d:hover{background:var(--red-bg);}
+.btn-ok{border-color:var(--green);color:var(--green);}
+.btn-ok:hover{background:var(--green-bg);}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+/* grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+/* stat */
+.stat{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px;text-align:center;}
+.sv{font-size:24px;font-weight:600;font-family:'JetBrains Mono',monospace;}
+.sl2{font-size:10px;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.5px;}
+/* tags */
+.tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500;}
+.tg{background:var(--green-bg);color:var(--green);}
+.ty{background:var(--yellow-bg);color:var(--yellow);}
+.tb{background:var(--blue-bg);color:var(--blue);}
+.tp{background:rgba(167,139,250,.12);color:#a78bfa;}
+/* accordion */
+.acc{border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:8px;}
+.acc-hd{padding:12px 14px;background:var(--surface2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:500;font-size:13px;user-select:none;}
+.acc-hd:hover{background:var(--surface3);}
+.acc-bd{padding:14px;background:var(--surface);border-top:1px solid var(--border);}
+/* tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--border);margin-bottom:16px;}
+.tb2{padding:7px 14px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text2);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;margin-bottom:-1px;font-weight:500;transition:all .15s;}
+.tb2:hover{color:var(--text);}
+.tb2.on{color:var(--accent);border-bottom-color:var(--accent);}
+/* entry */
+.entry{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:11px 13px;margin-bottom:7px;}
+.ehd{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+/* modal */
+.mbg{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;display:flex;align-items:center;justify-content:center;padding:14px;}
+.mbox{background:var(--surface);border:1px solid var(--border2);border-radius:var(--rl);padding:22px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;}
+/* kw */
+.kw-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px;}
+.kw-ok{background:var(--green-bg);color:var(--green);padding:2px 7px;border-radius:20px;font-size:11px;}
+.kw-no{background:var(--red-bg);color:var(--red);padding:2px 7px;border-radius:20px;font-size:11px;}
+/* suggest */
+.sug{border-left:3px solid;padding:9px 12px;border-radius:0 var(--r) var(--r) 0;background:var(--surface2);margin-bottom:7px;}
+.sug.sg{border-left-color:var(--green);}
+.sug.sy{border-left-color:var(--yellow);}
+.sug.sb{border-left-color:var(--blue);}
+.sug-t{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.sug-b{font-size:12px;color:var(--text2);line-height:1.6;}
+/* pdf viewer */
+.pdf-wrap{background:var(--surface2);border-radius:var(--rl);padding:10px;}
+.pdf-wrap iframe{width:100%;border:none;border-radius:var(--r);}
+/* tex */
+.tex-block{background:#10101a;border:1px solid var(--border);border-radius:var(--r);padding:14px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.8;color:#9090b8;white-space:pre-wrap;overflow:auto;max-height:500px;}
+.tc{color:#6ee7b7;}.ta{color:#60a5fa;}.tco{color:#404060;}
+/* li bar */
+.lb2{height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:4px;}
+.lf{height:100%;border-radius:2px;background:var(--accent2);}
+/* fb bar */
+.fb{height:3px;border-radius:2px;background:var(--border);overflow:hidden;margin-top:3px;}
+.ff{height:100%;border-radius:2px;}
+/* iq */
+.iq{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:9px;}
+/* toast */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r);padding:9px 18px;font-size:13px;z-index:9999;pointer-events:none;opacity:0;transition:opacity .2s;}
+#toast.show{opacity:1;}
+hr.div{border:none;border-top:1px solid var(--border);margin:14px 0;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+@media(max-width:700px){.app{flex-direction:column;}.sidebar{width:100%;height:auto;}.nav{display:flex;overflow-x:auto;padding:6px;}.ni{flex-shrink:0;}.g2,.g4{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="sidebar">
+  <div class="logo">
+    <div class="logo-title">Career Hub</div>
+    <div class="logo-sub">Aerospace &amp; Embedded</div>
+  </div>
+  <nav class="nav" id="nav"></nav>
+  <div class="sf">Data saved in your browser</div>
+</div>
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="page-title">Database</div>
+    <div id="page-actions" style="display:flex;gap:8px;"></div>
+  </div>
+  <div class="content" id="content"></div>
+</div>
+</div>
+<div class="mbg" id="mbg" style="display:none;" onclick="if(event.target===this)closeModal()">
+  <div class="mbox" id="mbox"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ─────────────────────────────────────────────
+   CONFIG
+───────────────────────────────────────────── */
+const AI_URL   = "https://api.anthropic.com/v1/messages";
+const AI_MODEL = "claude-sonnet-4-20250514";
+const ADMIN_PW = "aerospace2024";
+
+/* ─────────────────────────────────────────────
+   NAVIGATION
+───────────────────────────────────────────── */
+const TABS = [
+  {id:"db",    label:"My Database",    icon:'<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>'},
+  {id:"cv",    label:"CV / Resume",    icon:'<path d="M14 3v4a1 1 0 001 1h4M5 8V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2H7a2 2 0 01-2-2v-1M5 12H2m3 0l-2 2m2-2l-2-2"/>'},
+  {id:"li",    label:"LinkedIn",       icon:'<rect x="2" y="2" width="20" height="20" rx="2"/><path d="M7 10v7M7 7v.01M11 17v-4a2 2 0 014 0v4M11 13v4"/>'},
+  {id:"cl",    label:"Cover Letter",   icon:'<path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>'},
+  {id:"iv",    label:"Interview Prep", icon:'<path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>'},
+  {id:"ad",    label:"Admin",          icon:'<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>'},
+];
+
+let page = "db";
+let DB, aResult, adminOk=false, cvTab="pdf", ivTab="browse", tex="", accState={};
+
+function nav(){
+  document.getElementById("nav").innerHTML = TABS.map(t =>
+    `<button class="ni${page===t.id?" on":""}" onclick="go('${t.id}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${t.icon}</svg>${t.label}
+    </button>`).join("");
+}
+function go(id){ page=id; nav(); render(); }
+function render(){
+  const t = TABS.find(x=>x.id===page)||TABS[0];
+  document.getElementById("page-title").textContent = t.label;
+  document.getElementById("page-actions").innerHTML = "";
+  document.getElementById("content").innerHTML = loading("Loading...");
+  ({db:pageDB,cv:pageCV,li:pageLI,cl:pageCL,iv:pageIV,ad:pageAD}[page]||pageDB)();
+}
+
+/* ─────────────────────────────────────────────
+   STORAGE
+───────────────────────────────────────────── */
+const LS = {
+  g(k){ try{const v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch{return null;} },
+  s(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch{} },
+};
+function dbSave(){ LS.s("acp4_db",DB); }
+function ivLoad(){ return LS.g("acp4_iv")||[]; }
+function ivSave(d){ LS.s("acp4_iv",d); }
+function pendLoad(){ return LS.g("acp4_pend")||[]; }
+function pendSave(d){ LS.s("acp4_pend",d); }
+
+/* ─────────────────────────────────────────────
+   DEFAULT DATABASE
+───────────────────────────────────────────── */
+const BLANK = {
+  personal:{name:"",email:"",phone:"",location:"",linkedin:"",website:"",github:""},
+  summary:"",
+  professional:[], academic:[], projects:[], leadership:[], education:[],
+  skills:{programming:[],tools:[],hardware:[],languages:[]}
+};
+
+const SEED = {
+  personal:{name:"EMILLY RAIANE RODRIGUES",email:"emilyrayannerodrigues@gmail.com",phone:"+55 (55) 9 9650-1373",location:"São José dos Campos, Brazil",linkedin:"https://linkedin.com/in/emilly-raiane-rodrigues",website:"",github:""},
+  summary:"Dual-degree student in Aerospace Engineering and Embedded Systems, working on flight software for satellite systems across research, space agencies, and industry. Focused on building reliable real-time embedded systems under strict constraints.",
+  professional:[
+    {id:"visiona",title:"On-Board Data Handling (OBDH) Engineer Intern",company:"Visiona Tecnologia Espacial S.A.",location:"São José dos Campos, Brazil",date:"Oct 2025 -- Present",keywords:["OBDH","nanosatellite","NASA cFS","ECSS","telemetry","CDR"],
+     bullets:["Nanosatellite flight software development using NASA cFS and ECSS standards (E-ST-10C, E-ST-40C, M-ST-40C).","Validated telecommands and telemetry ensuring correctness, reliability, and proper satellite integration.","Developed camera module firmware in collaboration with the optical team.","Created Python tool to auto-convert Notion documentation to LaTeX-based PDF."]},
+    {id:"cnes",title:"Satellite Real-Time Embedded Systems Engineer Intern",company:"Centre national d'études spatiales (CNES)",location:"Toulouse, France",date:"Feb 2025 -- Aug 2025",keywords:["RTOS","XtratuM","ARM","ZYNQ","FPGA","FRAM","I2C","fault tolerance","flight software","satellite"],
+     bullets:["Developed flight software in partitioned RTOS (XtratuM hypervisor) for ARM ZYNQ platforms.","Designed FRAM-based recovery mechanism reducing satellite downtime from 7 hours to minutes (98\\% improvement).","Cut blocking startup from 40+ to under 5 seconds by redesigning task scheduling ({>}85\\% faster).","Integrated FRAM I2C slave device using FPGA-based IP on Zynq-7000 SoC (Zybo Z7).","Implemented satellite operating modes with automatic power sequencing in collaboration with the AOCS team.","Real-time C programming; debugging via JTAG and Xilinx SDK; automation in Python, Bash, Makefile, XML."]},
+    {id:"tima",title:"Fault-Tolerant Embedded Software Intern",company:"TIMA Laboratory",location:"Grenoble, France",date:"May 2024 -- Aug 2024",keywords:["STM32","bare-metal","I2C","UART","C","fault tolerance","radiation","CMake"],
+     bullets:["Developed bare-metal I2C and UART drivers in C between STM32 and Raspberry Pi.","Reduced test execution from 8.6~s to 0.014~s (99.85\\%) replacing UART polling with I2C state-reading.","Automated Bash tools for radiation experiment control on a particle accelerator.","Validated error detection mechanisms for radiation and EMI-induced communication faults."]}
+  ],
+  academic:[
+    {id:"ita",title:"Satellite Control and State Estimation Researcher",company:"Instituto Tecnológico de Aeronáutica (ITA)",location:"São José dos Campos, Brazil (Remote)",date:"Sep 2022 -- Sep 2023",keywords:["Kalman filter","MATLAB","AOCS","attitude control","Simulink","ITASAT-2"],
+     bullets:["Contributed to ITASAT-2 mission focused on space weather research.","Developed Extended Kalman Filter (EKF) in MATLAB reducing position noise by 81.7\\%.","Designed discrete-time state-feedback controllers for satellite attitude stabilization.","Built MIMO/SISO control for coupled and independent axes, preventing actuator saturation."]}
+  ],
+  projects:[
+    {id:"cva6",title:"Validation of 128-bit CVA6 RISC-V Processor",date:"Sep 2024 -- Jan 2025",keywords:["RISC-V","Assembly","Verilog","SystemVerilog","cache","memory"],
+     bullets:["Validated 128-bit extension of CVA6 RISC-V processor across 32/64/128-bit instruction sets.","Automated test suites in Assembly and Python for arithmetic, load/store, and sign-extension.","Debugged cache memory access bug from incorrect 128-bit load/store offset handling."]},
+    {id:"cubesat",title:"Embedded Software for CubeSat Prototype",date:"Jan 2024 -- May 2024",keywords:["CubeSat","ESP32","FreeRTOS","attitude control","UDP"],
+     bullets:["Flight software on ESP32 with FreeRTOS for solar panel orientation via light detection.","FSM for operational modes; UDP comms between satellite and ground station."]}
+  ],
+  leadership:[{id:"lead1",title:"Co-founder \\& Vice-President",org:"Student Space Initiative",date:"Sep 2022 -- Present",
+    bullets:["Reached 3,000+ students across Latin America through low-cost educational activities.","Built partnerships with Boeing, Airbus, Embraer, NASA, and ESA."]}],
+  education:[
+    {id:"g",institution:"Institut Polytechnique de Grenoble (Grenoble INP -- Phelma)",degree:"Master M2 in Embedded Systems (Dual Degree Program)",date:"Sep 2023 -- Aug 2025",location:"Grenoble, France",
+     details:["Final grade: 14.68/20","Recipient of a Brazilian government scholarship (BRAFITEC) due to academic excellence."]},
+    {id:"u",institution:"Universidade Federal de Santa Maria (UFSM)",degree:"Bachelor in Aerospace Engineering",date:"Mar 2020 -- Dec 2026 (Expected)",location:"Santa Maria, Brazil",
+     details:["Current grade: 8.98/10.0","One of 43 students selected from 11{,}000+ for the Líderes Estudar scholarship.","Awarded national prize recognizing top university students (6 of 8{,}000+ candidates)."]}
+  ],
+  skills:{
+    programming:["C","Python","Bash","VHDL","Assembly","MATLAB","Verilog","SystemC","C++"],
+    tools:["OpenOCD","Xilinx SDK","LaTeX","Git","SVN","Linux","CMake","Makefile","ModelSim","JTAG","GDB","Simulink"],
+    hardware:["STM32","ESP32","ARM Cortex-M/R","Xilinx Zynq","Spartan-3","Zybo Z7","NXP FRDM-KL25Z","Raspberry Pi"],
+    languages:["French (Advanced -- C1/C2)","English (Upper-Intermediate -- B2)","Portuguese (Native)","Spanish (Intermediate -- B1)"]
+  }
+};
+
+/* ─────────────────────────────────────────────
+   DATABASE TAB
+───────────────────────────────────────────── */
+const SMETA = {
+  professional:{label:"Professional Experience",icon:"💼",fields:["title","company","location","date"],bl:true,kw:true},
+  academic:    {label:"Research / Academic",    icon:"🔬",fields:["title","company","location","date"],bl:true,kw:true},
+  projects:    {label:"Projects",               icon:"⚙️", fields:["title","date"],                  bl:true,kw:true},
+  leadership:  {label:"Leadership",             icon:"⭐",fields:["title","org","date"],             bl:true,kw:false},
+  education:   {label:"Education",              icon:"🎓",fields:["institution","degree","date","location"],bl:false,kw:false,dt:true},
+};
+const FL = {title:"Title / Role",company:"Company",org:"Organization",location:"Location",date:"Date Range",institution:"Institution",degree:"Degree / Program"};
+
+function pageDB(){
+  document.getElementById("content").innerHTML = `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:8px;">
+    <div>
+      <div style="font-size:16px;font-weight:600;">My Database</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:2px;">Powers all other tabs. Edit everything here, then use CV / LinkedIn / Cover Letter tabs.</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-sm" onclick="dbClear()">🗑 Start Fresh</button>
+      <button class="btn btn-sm btn-p" onclick="dbSaveFields()">💾 Save All</button>
+    </div>
+  </div>
+
+  <!-- Personal -->
+  <div class="acc">
+    <div class="acc-hd" onclick="toggleAcc('p')">👤 Personal Information <span style="font-size:12px;color:var(--text3);margin-left:auto;">${accState.p===false?"▶":"▼"}</span></div>
+    ${accState.p!==false?`<div class="acc-bd">
+      <div class="g2">
+        <div><label class="lb">Full Name</label><input id="p-name" value="${esc(DB.personal.name)}"></div>
+        <div><label class="lb">Email</label><input id="p-email" value="${esc(DB.personal.email)}"></div>
+        <div><label class="lb">Phone</label><input id="p-phone" value="${esc(DB.personal.phone)}"></div>
+        <div><label class="lb">Location</label><input id="p-location" value="${esc(DB.personal.location)}"></div>
+        <div><label class="lb">LinkedIn URL</label><input id="p-linkedin" value="${esc(DB.personal.linkedin)}" placeholder="https://linkedin.com/in/..."></div>
+        <div><label class="lb">Website</label><input id="p-website" value="${esc(DB.personal.website)}" placeholder="https://..."></div>
+      </div>
+      <label class="lb">GitHub</label><input id="p-github" value="${esc(DB.personal.github)}" placeholder="https://github.com/...">
+      <label class="lb">Profile Summary</label><textarea id="p-summary" rows="3">${esc(DB.summary)}</textarea>
+    </div>`:""}
+  </div>
+
+  ${Object.entries(SMETA).map(([k,m])=>sectionAcc(k,m)).join("")}
+
+  <!-- Skills -->
+  <div class="acc">
+    <div class="acc-hd" onclick="toggleAcc('sk')">🛠 Skills <span style="font-size:12px;color:var(--text3);margin-left:auto;">${accState.sk===false?"▶":"▼"}</span></div>
+    ${accState.sk!==false?`<div class="acc-bd">
+      <div class="g2">
+        <div><label class="lb">Programming Languages</label><textarea id="sk-prog" rows="2">${esc((DB.skills.programming||[]).join(", "))}</textarea></div>
+        <div><label class="lb">Tools & Software</label><textarea id="sk-tools" rows="2">${esc((DB.skills.tools||[]).join(", "))}</textarea></div>
+        <div><label class="lb">Hardware / Platforms</label><textarea id="sk-hw" rows="2">${esc((DB.skills.hardware||[]).join(", "))}</textarea></div>
+        <div><label class="lb">Human Languages</label><textarea id="sk-lang" rows="2">${esc((DB.skills.languages||[]).join(", "))}</textarea></div>
+      </div>
+    </div>`:""}
+  </div>`;
+}
+
+function sectionAcc(key,m){
+  const entries = DB[key]||[];
+  const open = accState[key]!==false;
+  return `<div class="acc">
+    <div class="acc-hd" onclick="toggleAcc('${key}')">
+      ${m.icon} ${m.label} <span style="font-size:11px;color:var(--text3);font-weight:400;margin-left:4px;">(${entries.length})</span>
+      <span style="font-size:12px;color:var(--text3);margin-left:auto;">${open?"▼":"▶"}</span>
+    </div>
+    ${open?`<div class="acc-bd">
+      ${entries.map((e,i)=>`<div class="entry"><div class="ehd">
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:13px;font-weight:500;">${esc(e.title||e.institution||e.degree||"Untitled")}</div>
+          <div style="font-size:12px;color:var(--text2);">${esc(e.company||e.org||e.institution||"")}${e.date?" · "+esc(e.date):""}</div>
+        </div>
+        <div class="btn-row" style="flex-shrink:0;">
+          <button class="btn btn-sm" onclick="openModal('${key}',${i})">✏</button>
+          <button class="btn btn-sm btn-d" onclick="delEntry('${key}',${i})">🗑</button>
+        </div>
+      </div></div>`).join("")}
+      <button class="btn btn-sm btn-p" style="width:100%;justify-content:center;margin-top:4px;" onclick="openModal('${key}',-1)">+ Add</button>
+    </div>`:""}
+  </div>`;
+}
+
+function toggleAcc(k){ accState[k] = accState[k]===false; pageDB(); }
+
+function openModal(key, idx){
+  const m = SMETA[key]; if(!m) return;
+  const isNew = idx===-1;
+  const e = isNew ? {} : (DB[key][idx]||{});
+  let h = `<div style="font-size:15px;font-weight:600;margin-bottom:14px;">${isNew?"Add":"Edit"} ${m.label.replace(/s$/,"").replace(/ \/.*/,"")}</div>`;
+  m.fields.forEach(f => { h += `<label class="lb">${FL[f]||f}</label><input id="mf-${f}" value="${esc(e[f]||"")}">` });
+  if(m.kw) h += `<label class="lb">Keywords (comma-separated)</label><input id="mf-kw" value="${esc((e.keywords||[]).join(", "))}">`;
+  if(m.bl) h += `<label class="lb">Bullets (one per line)</label><textarea id="mf-bl" rows="6">${esc((e.bullets||[]).join("\n"))}</textarea>`;
+  if(m.dt) h += `<label class="lb">Details / Highlights (one per line)</label><textarea id="mf-dt" rows="4">${esc((e.details||[]).join("\n"))}</textarea>`;
+  h += `<div class="btn-row" style="margin-top:8px;">
+    <button class="btn btn-p" style="flex:1;justify-content:center;" onclick="saveModal('${key}',${idx})">✓ Save</button>
+    <button class="btn" onclick="closeModal()">Cancel</button>
+  </div>`;
+  showModal(h);
+}
+
+function saveModal(key, idx){
+  const m = SMETA[key]; if(!m) return;
+  const e = {};
+  m.fields.forEach(f=>{ const el=document.getElementById("mf-"+f); if(el) e[f]=el.value.trim(); });
+  if(m.kw){ const el=document.getElementById("mf-kw"); if(el) e.keywords=el.value.split(",").map(s=>s.trim()).filter(Boolean); }
+  if(m.bl){ const el=document.getElementById("mf-bl"); if(el) e.bullets=el.value.split("\n").map(s=>s.trim()).filter(Boolean); }
+  if(m.dt){ const el=document.getElementById("mf-dt"); if(el) e.details=el.value.split("\n").map(s=>s.trim()).filter(Boolean); }
+  e.id = idx===-1 ? "e"+Date.now() : (DB[key][idx]?.id||"e"+Date.now());
+  if(idx===-1) DB[key].push(e); else DB[key][idx]=e;
+  dbSave(); closeModal(); pageDB(); toast("Saved!");
+}
+
+function delEntry(key,idx){ if(!confirm("Delete?")) return; DB[key].splice(idx,1); dbSave(); pageDB(); }
+
+function dbSaveFields(){
+  const g = id => { const el=document.getElementById(id); return el?el.value.trim():""; };
+  DB.personal.name=g("p-name"); DB.personal.email=g("p-email"); DB.personal.phone=g("p-phone");
+  DB.personal.location=g("p-location"); DB.personal.linkedin=g("p-linkedin");
+  DB.personal.website=g("p-website"); DB.personal.github=g("p-github"); DB.summary=g("p-summary");
+  const sk = id => { const el=document.getElementById(id); return el?el.value.split(",").map(s=>s.trim()).filter(Boolean):[]; };
+  if(document.getElementById("sk-prog"))  DB.skills.programming=sk("sk-prog");
+  if(document.getElementById("sk-tools")) DB.skills.tools=sk("sk-tools");
+  if(document.getElementById("sk-hw"))    DB.skills.hardware=sk("sk-hw");
+  if(document.getElementById("sk-lang"))  DB.skills.languages=sk("sk-lang");
+  dbSave(); toast("All changes saved!");
+}
+
+function dbClear(){ if(!confirm("Erase all data?")) return; DB=JSON.parse(JSON.stringify(BLANK)); dbSave(); pageDB(); }
+
+/* ─────────────────────────────────────────────
+   CV TAB
+───────────────────────────────────────────── */
+function pageCV(){
+  document.getElementById("page-actions").innerHTML = `
+    <button class="btn btn-sm" onclick="dlTex()">⬇ .tex</button>
+    <button class="btn btn-sm" onclick="dlPDF()">⬇ PDF</button>`;
+  document.getElementById("content").innerHTML = `
+  <div class="tabs">
+    <button class="tb2${cvTab==="pdf"?" on":""}" onclick="cvSwitch('pdf')">PDF Preview</button>
+    <button class="tb2${cvTab==="tailor"?" on":""}" onclick="cvSwitch('tailor')">Tailor for Job</button>
+    <button class="tb2${cvTab==="tex"?" on":""}" onclick="cvSwitch('tex')">LaTeX Source</button>
+  </div>
+  <div id="cv-body"></div>`;
+  renderCVBody();
+}
+function cvSwitch(t){ cvTab=t; pageCV(); }
+
+function renderCVBody(){
+  const b = document.getElementById("cv-body"); if(!b) return;
+  if(cvTab==="pdf") renderPDFTab(b);
+  else if(cvTab==="tailor") b.innerHTML = renderTailorUI();
+  else renderTexTab(b);
+}
+
+/* PDF tab — shows compiled cv.pdf if it exists in the repo */
+function renderPDFTab(b){
+  // Check if a compiled pdf exists (CI puts it at ./cv.pdf)
+  const pdfUrl = "./cv.pdf";
+  const hasLocalPDF = window._pdfBlob != null;
+
+  b.innerHTML = `
+  <div class="card">
+    <div style="font-size:13px;color:var(--text2);margin-bottom:12px;line-height:1.6;">
+      ${hasLocalPDF
+        ? "📄 PDF compiled from your current LaTeX — showing latest version."
+        : `📄 Showing the PDF compiled by GitHub Actions. To update it:<br>
+           1. Click <strong>Tailor for Job</strong> or go to <strong>LaTeX Source</strong><br>
+           2. Click <strong>⬇ .tex</strong> to download the file<br>
+           3. Commit it to your repo as <code style="color:var(--accent);background:var(--surface3);padding:1px 5px;border-radius:3px;">cv.tex</code><br>
+           4. GitHub Actions will compile it and publish the updated PDF automatically`}
+    </div>
+    ${!hasLocalPDF?`<div class="btn-row" style="margin-bottom:14px;">
+      <button class="btn btn-p" onclick="genTex().then(compileBrowser)">⚡ Generate & Compile Now</button>
+    </div>`:`<div class="btn-row" style="margin-bottom:14px;">
+      <button class="btn btn-p" onclick="genTex().then(compileBrowser)">↻ Recompile</button>
+    </div>`}
+  </div>
+  <div class="pdf-wrap" id="pdf-wrap">
+    ${hasLocalPDF
+      ? `<iframe src="${URL.createObjectURL(window._pdfBlob)}" style="height:80vh;" title="CV PDF"></iframe>`
+      : `<iframe src="${pdfUrl}" style="height:80vh;" title="CV PDF"
+           onerror="this.outerHTML='<div style=\\'padding:40px;text-align:center;color:var(--text3);\\'>No compiled PDF yet. Generate LaTeX and commit cv.tex to your repo, or click Generate &amp; Compile Now above.</div>'"
+         ></iframe>`}
+  </div>`;
+}
+
+/* Compile in-browser by sending to a local server if available, else show instructions */
+async function compileBrowser(){
+  if(!tex){ await genTex(); }
+  // Try local server first
+  try{
+    const r = await fetch("http://localhost:8765/compile",{
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({latex:tex}), signal:AbortSignal.timeout(20000)
+    });
+    const d = await r.json();
+    if(d.ok){
+      const arr = Uint8Array.from(atob(d.pdf),c=>c.charCodeAt(0));
+      window._pdfBlob = new Blob([arr],{type:"application/pdf"});
+      cvSwitch("pdf"); return;
+    }
+  } catch{}
+  // Fallback: offer download and Overleaf
+  toast("Local server not running — download .tex and compile in Overleaf","warn");
+  dlTex();
+}
+
+function dlPDF(){
+  if(window._pdfBlob){
+    const a=document.createElement("a"); a.href=URL.createObjectURL(window._pdfBlob);
+    a.download=(DB.personal.name||"cv").replace(/\s+/g,"_").toLowerCase()+"_cv.pdf";
+    a.click();
+  } else { toast("Generate and compile PDF first","warn"); }
+}
+
+/* Tailor UI */
+function renderTailorUI(){
+  return `<div class="card">
+    <span class="sl">AI Tailoring</span>
+    <label class="lb">Paste the full job description</label>
+    <textarea id="jd" rows="8" placeholder="Paste the job posting here..."></textarea>
+    <div class="g2" style="margin-bottom:8px;">
+      <div><label class="lb">Length</label><select id="jd-pg"><option value="1">1 page</option><option value="2" selected>2 pages</option></select></div>
+      <div><label class="lb">Language</label><select id="jd-la"><option value="en">English</option><option value="pt">Portuguese</option><option value="fr">French</option></select></div>
+    </div>
+    <div style="display:flex;gap:14px;margin-bottom:12px;font-size:13px;">
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="jd-ats" checked> ATS optimization</label>
+      <label style="display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="jd-con"> Concise (1 line/bullet)</label>
+    </div>
+    <button class="btn btn-p" onclick="runTailor()">✦ Analyze & Tailor</button>
+  </div>
+  <div id="tailor-out"></div>`;
+}
+
+async function runTailor(){
+  const jd = document.getElementById("jd")?.value.trim();
+  if(!jd){ toast("Paste a job description first","warn"); return; }
+  const out = document.getElementById("tailor-out");
+  out.innerHTML = loading("Analyzing with AI...");
+  const con = document.getElementById("jd-con")?.checked;
+  const ats = document.getElementById("jd-ats")?.checked;
+  const pgs = document.getElementById("jd-pg")?.value;
+
+  try{
+    const resp = await ai(`Analyze this job vs candidate database. Return ONLY valid JSON.
+JOB: ${jd}
+DB: ${JSON.stringify({professional:DB.professional,academic:DB.academic,projects:DB.projects,skills:DB.skills},null,2)}
+pages=${pgs},ATS=${ats},concise=${con}${con?". Every bullet max 10 words.":""}
+{"jobTitle":"","company":"","matchScore":85,"atsScore":72,"summary":"2-3 sentence tailored summary","keywordsFound":["k"],"keywordsMissing":["k"],"included":["id"],"annotations":{"id":{"status":"green|yellow|red","reason":"why"}},"tailoredBullets":{"id":["bullet"]},"suggestions":[{"type":"success|warn|info","title":"","text":""}],"pageEstimate":""}`, 7000);
+    let r; try{r=JSON.parse(resp);}catch{const m=resp.match(/\{[\s\S]*\}/);if(m)r=JSON.parse(m[0]);else throw new Error("Parse failed");}
+    aResult=r;
+    const mc=r.matchScore>=70?"var(--green)":r.matchScore>=50?"var(--yellow)":"var(--red)";
+    out.innerHTML=`<div class="card">
+      <div class="g4" style="margin-bottom:14px;">
+        <div class="stat"><div class="sv" style="color:${mc};">${r.matchScore}%</div><div class="sl2">Match</div></div>
+        <div class="stat"><div class="sv" style="color:var(--accent2);">${r.atsScore}%</div><div class="sl2">ATS</div></div>
+        <div class="stat"><div class="sv">${r.included?.length||0}</div><div class="sl2">Included</div></div>
+        <div class="stat"><div class="sv" style="font-size:16px;">${esc(r.pageEstimate||"?")}</div><div class="sl2">Pages</div></div>
+      </div>
+      <div style="margin-bottom:10px;"><span class="sl">Keywords found</span><div class="kw-wrap">${(r.keywordsFound||[]).map(k=>`<span class="kw-ok">${esc(k)}</span>`).join("")}</div></div>
+      <div style="margin-bottom:12px;"><span class="sl">Keywords missing</span><div class="kw-wrap">${(r.keywordsMissing||[]).map(k=>`<span class="kw-no">${esc(k)}</span>`).join("")}</div></div>
+      ${(r.suggestions||[]).map(s=>`<div class="sug s${s.type==="success"?"g":s.type==="warn"?"y":"b"}"><div class="sug-t">${esc(s.title)}</div><div class="sug-b">${esc(s.text)}</div></div>`).join("")}
+      <div class="btn-row" style="margin-top:12px;">
+        <button class="btn btn-p" onclick="genTex().then(()=>cvSwitch('pdf'))">⚡ Generate PDF</button>
+        <button class="btn" onclick="cvSwitch('tex')">View LaTeX</button>
+      </div>
+    </div>`;
+  }catch(e){ out.innerHTML=`<div class="card" style="color:var(--red);">Error: ${esc(e.message)}</div>`; }
+}
+
+/* LaTeX tab */
+function renderTexTab(b){
+  if(!tex){
+    b.innerHTML=`<div class="card" style="text-align:center;padding:36px;">
+      <div style="font-size:32px;margin-bottom:10px;">📄</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:10px;">No LaTeX code yet</div>
+      <button class="btn btn-p" onclick="genTex().then(()=>cvSwitch('tex'))">⚡ Generate LaTeX</button>
+    </div>`; return;
+  }
+  const hl = tex.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/(\\[a-zA-Z]+)/g,'<span class="tc">$1</span>')
+    .replace(/(\{[^}]*\})/g,'<span class="ta">$1</span>')
+    .replace(/(%.+)/g,'<span class="tco">$1</span>');
+  b.innerHTML=`<div class="btn-row" style="margin-bottom:12px;">
+    <button class="btn btn-p" onclick="genTex().then(()=>cvSwitch('tex'))">⚡ Regenerate</button>
+    <button class="btn" id="cp-tex" onclick="copyTex()">📋 Copy</button>
+    <button class="btn" onclick="dlTex()">⬇ Download cv.tex</button>
+    <button class="btn btn-ok" onclick="genTex().then(compileBrowser)">🔄 Compile PDF</button>
+  </div>
+  <div style="font-size:12px;color:var(--text2);padding:10px;background:var(--surface2);border-radius:var(--r);margin-bottom:10px;line-height:1.6;">
+    📌 <strong>Deploy flow:</strong> Download <code style="color:var(--accent);">cv.tex</code> → commit to your GitHub repo → GitHub Actions compiles it with pdflatex → PDF goes live automatically at your GitHub Pages URL.
+    <br>Alternatively: paste in <a href="https://overleaf.com" target="_blank">Overleaf</a> for instant preview.
+  </div>
+  <div class="tex-block">${hl}</div>`;
+}
+
+async function genTex(){
+  const b = document.getElementById("cv-body");
+  if(b) b.innerHTML = loading("Generating LaTeX...");
+  const r=aResult, incl=r?(r.included||[]):null, tb=r?(r.tailoredBullets||{}):{};
+  const bl = (id,base) => tb[id]||base||[];
+  const vis = id => !incl||incl.includes(id);
+  const profV = (DB.professional||[]).filter(e=>vis(e.id));
+  const acadV = (DB.academic||[]).filter(e=>vis(e.id));
+  const projV = (DB.projects||[]).filter(e=>vis(e.id));
+
+  const nm = (DB.personal.name||"First Last").trim().split(" ");
+  const last=nm.pop()||"", first=nm.join(" ")||"Name";
+
+  const contacts=[];
+  if(DB.personal.phone)  contacts.push(`\\phone[mobile]{${te(DB.personal.phone)}}`);
+  if(DB.personal.email)  contacts.push(`\\email{${DB.personal.email}}`);
+  if(DB.personal.website)contacts.push(`\\homepage{${DB.personal.website.replace(/^https?:\/\//,"")}}`);
+  if(DB.personal.linkedin){const s=DB.personal.linkedin.replace(/.*\/in\//,"").replace(/\/$/,"");contacts.push(`\\social[linkedin]{${s}}`);}
+  if(DB.personal.github) {const s=DB.personal.github.replace(/.*github\.com\//,"").replace(/\/$/,"");contacts.push(`\\social[github]{${s}}`);}
+
+  function cventry(e, buls){
+    const items = (buls||[]).length
+      ? `\n\\begin{itemize}\n${buls.map(b=>`  \\item ${tb2(b)}`).join("\n")}\n\\end{itemize}` : "";
+    return `\\cventry{${te(e.date||"")}}{${te(e.title||e.degree||"")}}{${te(e.company||e.institution||e.org||"")}}{${te(e.location||"")}}{}{${items}}`;
+  }
+
+  tex = `%% Generated by Aerospace Career Platform
+\\documentclass[11pt,a4paper,sans]{moderncv}
+\\moderncvstyle{banking}
+\\moderncvcolor{blue}
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage[scale=0.85]{geometry}
+\\usepackage{microtype}
+\\nopagenumbers{}
+
+\\name{${te(first)}}{${te(last)}}
+${contacts.join("\n")}
+
+\\begin{document}
+\\makecvtitle
+${r?.summary||DB.summary?`\n\\section{Profile}\n\\cvitem{}{${te(r?.summary||DB.summary)}}`:``}
+${profV.length?`\n\\section{Professional Experience}\n${profV.map(e=>cventry(e,bl(e.id,e.bullets))).join("\n\n")}`:``}
+${acadV.length?`\n\\section{Research Experience}\n${acadV.map(e=>cventry(e,bl(e.id,e.bullets))).join("\n\n")}`:``}
+${(DB.education||[]).length?`\n\\section{Education}\n${(DB.education||[]).map(e=>cventry(e,e.details)).join("\n\n")}`:``}
+${projV.length?`\n\\section{Projects}\n${projV.map(e=>{const b=bl(e.id,e.bullets);const items=b.length?`\n\\begin{itemize}\n${b.map(x=>`  \\item ${tb2(x)}`).join("\n")}\n\\end{itemize}`:"";return`\\cventry{${te(e.date||"")}}{${te(e.title||"")}}{}{}{}{${items}}`;}).join("\n\n")}`:``}
+${(DB.leadership||[]).length?`\n\\section{Leadership \\& Initiatives}\n${(DB.leadership||[]).map(e=>cventry(e,e.bullets)).join("\n\n")}`:``}
+${(DB.skills.programming||[]).length?`\n\\section{Skills}
+\\cvitem{Programming}{${(DB.skills.programming||[]).join(", ")}}
+\\cvitem{Tools}{${(DB.skills.tools||[]).join(", ")}}
+\\cvitem{Hardware}{${(DB.skills.hardware||[]).join(", ")}}
+\\cvitem{Languages}{${(DB.skills.languages||[]).join(", ")}}`:``}
+
+\\end{document}`;
+  return tex;
+}
+
+function te(s){ // TeX escape
+  if(!s)return"";
+  return String(s).replace(/\\/g,"\\textbackslash{}").replace(/&/g,"\\&").replace(/%/g,"\\%")
+    .replace(/\$/g,"\\$").replace(/#/g,"\\#").replace(/_/g,"\\_")
+    .replace(/\^/g,"\\textasciicircum{}").replace(/~/g,"\\textasciitilde{}");
+}
+function tb2(s){ // bullet safe escape (already may have \%)
+  if(!s)return String(s||"");
+  return String(s).replace(/(?<!\\)&/g,"\\&").replace(/(?<!\\)#/g,"\\#").replace(/(?<!\\)\$/g,"\\$");
+}
+function copyTex(){navigator.clipboard.writeText(tex||"").then(()=>{const b=document.getElementById("cp-tex");if(b){b.textContent="✓";setTimeout(()=>b.textContent="📋 Copy",1800);}});}
+function dlTex(){
+  if(!tex){toast("Generate LaTeX first","warn");return;}
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([tex],{type:"text/plain"}));
+  a.download="cv.tex";a.click();toast("Downloaded cv.tex — commit to your repo!");
+}
+
+/* ─────────────────────────────────────────────
+   LINKEDIN TAB
+───────────────────────────────────────────── */
+function pageLI(){
+  document.getElementById("content").innerHTML=`<div class="card">
+    <span class="sl">LinkedIn Profile Optimizer</span>
+    <label class="lb">Current Headline</label><input id="li-hl" placeholder="e.g. Aerospace Eng Student | Embedded Systems | CNES · Visiona">
+    <label class="lb">Current About / Summary</label><textarea id="li-ab" rows="6" placeholder="Paste your current LinkedIn About section..."></textarea>
+    <label class="lb">Target role or job description (optional)</label><textarea id="li-tg" rows="3" placeholder="Paste a job description to tailor the analysis..."></textarea>
+    <button class="btn btn-p" onclick="runLI()">✦ Analyze Profile</button>
+  </div><div id="li-out"></div>`;
+}
+async function runLI(){
+  const hl=document.getElementById("li-hl")?.value.trim();
+  const ab=document.getElementById("li-ab")?.value.trim();
+  const tg=document.getElementById("li-tg")?.value.trim();
+  const out=document.getElementById("li-out"); out.innerHTML=loading("Analyzing...");
+  try{
+    const resp=await ai(`LinkedIn expert for aerospace/embedded professionals.
+CANDIDATE: ${JSON.stringify({personal:DB.personal,summary:DB.summary,professional:DB.professional,academic:DB.academic,education:DB.education,skills:DB.skills},null,2)}
+HEADLINE: ${hl||"(not provided)"}  ABOUT: ${ab||"(not provided)"}  TARGET: ${tg||"general aerospace / embedded"}
+Return ONLY valid JSON:
+{"overallScore":72,"sections":[{"name":"Headline","score":65,"issues":["i"],"suggested":"better version","why":"reason"},{"name":"About","score":70,"issues":["i"],"suggested":"full rewritten about","why":"reason"},{"name":"Experience Bullets","score":80,"issues":["i"],"suggestions":["Rewrite X as Y"]},{"name":"Skills Section","score":55,"missingSkills":["s1"]},{"name":"Featured / Media","score":40,"suggestions":["Add X"]}],"quickWins":["w1","w2"],"keywordsToAdd":["k1"]}`,3000);
+    let r;try{r=JSON.parse(resp);}catch{const m=resp.match(/\{[\s\S]*\}/);if(m)r=JSON.parse(m[0]);else throw new Error("Parse failed");}
+    out.innerHTML=`<div class="card" style="margin-top:8px;">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+        <div class="stat" style="min-width:76px;"><div class="sv" style="color:var(--accent2);">${r.overallScore}</div><div class="sl2">Score</div></div>
+        <div style="flex:1;"><div style="font-size:12px;font-weight:500;margin-bottom:5px;">Quick Wins</div>${(r.quickWins||[]).map(w=>`<div style="font-size:12px;color:var(--text2);margin-bottom:2px;">✅ ${esc(w)}</div>`).join("")}</div>
+      </div>
+      <div class="kw-wrap">${(r.keywordsToAdd||[]).map(k=>`<span class="tag tb">${esc(k)}</span>`).join("")}</div>
+    </div>
+    ${(r.sections||[]).map(s=>`<div class="card" style="margin-top:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+        <div style="font-weight:600;font-size:14px;">${esc(s.name)}</div>
+        <div style="display:flex;align-items:center;gap:8px;"><span style="font-size:12px;color:var(--text2);">${s.score}/100</span><div class="lb2" style="width:80px;"><div class="lf" style="width:${s.score}%;"></div></div></div>
+      </div>
+      ${(s.issues||[]).map(i=>`<div style="font-size:12px;color:var(--yellow);margin-bottom:2px;">⚠ ${esc(i)}</div>`).join("")}
+      ${s.suggested?`<div style="background:var(--green-bg);border:1px solid rgba(34,197,94,.18);border-radius:var(--r);padding:10px;margin:8px 0;"><div style="font-size:10px;font-weight:600;color:var(--green);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;">Suggested</div><div style="font-size:13px;white-space:pre-wrap;line-height:1.6;">${esc(s.suggested)}</div></div>`:""}
+      ${(s.suggestions||[]).map(sg=>`<div style="font-size:12px;color:var(--text2);margin-bottom:2px;">→ ${esc(sg)}</div>`).join("")}
+      ${(s.missingSkills||[]).length?`<div class="kw-wrap">${s.missingSkills.map(k=>`<span class="kw-no">${esc(k)}</span>`).join("")}</div>`:""}
+    </div>`).join("")}`;
+  }catch(e){out.innerHTML=`<div class="card" style="color:var(--red);">Error: ${esc(e.message)}</div>`;}
+}
+
+/* ─────────────────────────────────────────────
+   COVER LETTER TAB
+───────────────────────────────────────────── */
+function pageCL(){
+  document.getElementById("content").innerHTML=`<div class="card">
+    <span class="sl">Cover Letter Generator</span>
+    <div class="g2"><div><label class="lb">Company</label><input id="cl-co" placeholder="e.g. Planet Labs"></div><div><label class="lb">Position</label><input id="cl-ro" placeholder="e.g. Embedded Software Engineer"></div></div>
+    <label class="lb">Job Description (paste for best tailoring)</label><textarea id="cl-jd" rows="7" placeholder="Paste the job description..."></textarea>
+    <div class="g2" style="margin-bottom:8px;">
+      <div><label class="lb">Tone</label><select id="cl-to"><option value="professional">Professional & formal</option><option value="enthusiastic">Enthusiastic & personal</option><option value="concise">Concise & direct</option></select></div>
+      <div><label class="lb">Language</label><select id="cl-la"><option value="en">English</option><option value="pt">Portuguese (BR)</option><option value="fr">French</option></select></div>
+    </div>
+    <button class="btn btn-p" onclick="runCL()">✦ Generate Letter</button>
+  </div><div id="cl-out"></div>`;
+}
+async function runCL(){
+  const co=document.getElementById("cl-co")?.value.trim();
+  const ro=document.getElementById("cl-ro")?.value.trim();
+  if(!co||!ro){toast("Fill in company and position","warn");return;}
+  const out=document.getElementById("cl-out"); out.innerHTML=loading("Writing cover letter...");
+  const jd=document.getElementById("cl-jd")?.value.trim();
+  const to=document.getElementById("cl-to")?.value;
+  const la=document.getElementById("cl-la")?.value;
+  const tmap={professional:"formal and professional",enthusiastic:"enthusiastic and personal, showing genuine passion for space",concise:"very concise and direct, max 3 tight paragraphs"};
+  const lmap={en:"English",pt:"Brazilian Portuguese",fr:"French"};
+  try{
+    const text=await ai(`Write a cover letter for ${DB.personal.name||"the candidate"} applying for ${ro} at ${co}.
+CANDIDATE: ${JSON.stringify({personal:DB.personal,summary:DB.summary,professional:DB.professional,academic:DB.academic,education:DB.education,skills:DB.skills},null,2)}
+JOB: ${jd||ro+" at "+co}  TONE: ${tmap[to]}.  Language: ${lmap[la]}.
+Structure: Hook → why this company specifically → most relevant experience with 2-3 concrete metrics → skills match → call to action.
+Return ONLY the letter text.`,1800);
+    out.innerHTML=`<div class="card" style="margin-top:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+        <div style="font-weight:600;">Cover Letter — ${esc(co)}</div>
+        <div class="btn-row"><button class="btn btn-sm" onclick="cpEl('cl-txt')">📋 Copy</button><button class="btn btn-sm btn-p" onclick="runCL()">↻ Regenerate</button></div>
+      </div>
+      <textarea id="cl-txt" rows="22" style="font-size:13px;line-height:1.7;">${esc(text)}</textarea>
+    </div>`;
+  }catch(e){out.innerHTML=`<div class="card" style="color:var(--red);">Error: ${esc(e.message)}</div>`;}
+}
+
+/* ─────────────────────────────────────────────
+   INTERVIEW TAB
+───────────────────────────────────────────── */
+function pageIV(){
+  const ivs=ivLoad();
+  document.getElementById("content").innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <div><div style="font-size:16px;font-weight:600;">Interview Prep</div><div style="font-size:12px;color:var(--text2);margin-top:2px;">Collaborative question bank · ${ivs.length} approved entries</div></div>
+    <button class="btn btn-p" onclick="submitModal()">+ Submit Question</button>
+  </div>
+  <div class="tabs">
+    <button class="tb2${ivTab==="browse"?" on":""}" onclick="ivSwitch('browse')">Browse Questions</button>
+    <button class="tb2${ivTab==="practice"?" on":""}" onclick="ivSwitch('practice')">AI Mock Interview</button>
+    <button class="tb2${ivTab==="tips"?" on":""}" onclick="ivSwitch('tips')">Tips by Area</button>
+  </div>
+  <div id="iv-body"></div>`;
+  renderIVBody();
+}
+function ivSwitch(t){ivTab=t;pageIV();}
+function renderIVBody(){
+  const b=document.getElementById("iv-body");if(!b)return;
+  const ivs=ivLoad();
+  if(ivTab==="browse") b.innerHTML=renderBrowse(ivs);
+  else if(ivTab==="practice") b.innerHTML=renderPractice();
+  else b.innerHTML=renderTips();
+}
+
+function renderBrowse(ivs){
+  const cos=[...new Set(ivs.map(i=>i.company))].sort();
+  if(!ivs.length) return`<div style="text-align:center;padding:48px;color:var(--text3);"><div style="font-size:32px;margin-bottom:10px;">💬</div>No approved questions yet. Be the first to submit one.</div>`;
+  return`<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+    <select id="fil-co" onchange="filterQ()" style="flex:1;min-width:150px;"><option value="">All companies</option>${cos.map(c=>`<option>${esc(c)}</option>`).join("")}</select>
+    <select id="fil-ty" onchange="filterQ()" style="flex:1;min-width:150px;"><option value="">All types</option><option value="technical">Technical</option><option value="behavioral">Behavioral</option><option value="motivational">Motivational</option></select>
+  </div>
+  <div id="q-list">${ivs.map((q,i)=>qcard(q,i)).join("")}</div>`;
+}
+function qcard(q,i){
+  return`<div class="iq"><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:5px;"><span class="tag tb">${esc(q.company)}</span><span class="tag ty">${esc(q.type||"general")}</span>${q.role?`<span class="tag tp">${esc(q.role)}</span>`:""}</div>
+  <div style="font-weight:500;font-size:14px;margin-bottom:5px;">${esc(q.question)}</div>
+  ${q.context?`<div style="font-size:12px;color:var(--text2);margin-bottom:5px;">ℹ ${esc(q.context)}</div>`:""}
+  ${q.sampleAnswer?`<details><summary style="cursor:pointer;font-size:12px;color:var(--text2);">Sample answer</summary><div style="font-size:12px;color:var(--text2);padding:7px 0;line-height:1.6;white-space:pre-wrap;">${esc(q.sampleAnswer)}</div></details>`:""}
+  ${q.tips?`<div style="background:var(--yellow-bg);color:var(--yellow);padding:5px 9px;border-radius:var(--r);font-size:12px;margin:5px 0;">💡 ${esc(q.tips)}</div>`:""}
+  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;margin-top:6px;">
+    ${q.submittedBy?`<span style="font-size:11px;color:var(--text3);">by ${esc(q.submittedBy)}</span>`:"<span></span>"}
+    <button class="btn btn-sm" onclick="practiceQ(${i})">✦ Practice with AI</button>
+  </div></div>`;
+}
+function filterQ(){
+  const co=document.getElementById("fil-co")?.value;
+  const ty=document.getElementById("fil-ty")?.value;
+  const all=ivLoad().filter(q=>(!co||q.company===co)&&(!ty||q.type===ty));
+  const l=document.getElementById("q-list");
+  if(l)l.innerHTML=all.length?all.map((q,i)=>qcard(q,i)).join(""):`<div style="text-align:center;padding:28px;color:var(--text3);">No questions match.</div>`;
+}
+
+function renderPractice(){
+  return`<div class="card"><span class="sl">AI Mock Interview Session</span>
+    <label class="lb">Target company / role</label><input id="pr-co" placeholder="e.g. ESA — Embedded Software Engineer">
+    <label class="lb">Interview type</label><select id="pr-ty" style="margin-bottom:10px;"><option value="technical">Technical</option><option value="behavioral">Behavioral (STAR)</option><option value="motivational">Motivational</option><option value="mixed">Mixed</option></select>
+    <button class="btn btn-p" onclick="startMock()">▶ Start Session</button>
+  </div><div id="mock-out"></div>`;
+}
+async function startMock(){
+  const co=document.getElementById("pr-co")?.value.trim()||"a space company";
+  const ty=document.getElementById("pr-ty")?.value;
+  const out=document.getElementById("mock-out"); out.innerHTML=loading("Preparing interview...");
+  try{
+    const resp=await ai(`You are an interviewer at ${co}. Generate a realistic 5-question ${ty} interview.
+CANDIDATE: ${JSON.stringify({name:DB.personal.name,professional:DB.professional,academic:DB.academic,education:DB.education,skills:DB.skills},null,2)}
+Return ONLY JSON: {"sessionTitle":"","intro":"1 sentence","questions":[{"q":"","type":"technical|behavioral|motivational","hint":"what they look for","goodElements":["el"]}]}`,2500);
+    let r;try{r=JSON.parse(resp);}catch{const m=resp.match(/\{[\s\S]*\}/);if(m)r=JSON.parse(m[0]);else throw new Error("Parse failed");}
+    out.innerHTML=`<div class="card" style="margin-top:10px;"><div style="font-weight:600;font-size:15px;margin-bottom:4px;">${esc(r.sessionTitle||"")}</div><div style="font-size:13px;color:var(--text2);margin-bottom:14px;">${esc(r.intro||"")}</div>
+    ${(r.questions||[]).map((q,qi)=>`<div style="border:1px solid var(--border);border-radius:var(--r);padding:13px;margin-bottom:10px;">
+      <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);margin-bottom:5px;">Q${qi+1} · <span class="tag t${q.type==="technical"?"b":q.type==="behavioral"?"y":"p"}" style="font-size:10px;">${esc(q.type)}</span></div>
+      <div style="font-weight:500;font-size:14px;margin-bottom:9px;">${esc(q.q)}</div>
+      <label class="lb">Your answer</label><textarea id="an-${qi}" rows="4" placeholder="Write your answer..."></textarea>
+      <details style="margin-bottom:7px;"><summary style="cursor:pointer;font-size:12px;color:var(--text2);">What they're looking for</summary>
+        <div style="font-size:12px;color:var(--text2);padding:5px 0;line-height:1.6;">${esc(q.hint||"")}${(q.goodElements||[]).length?`<div class="kw-wrap" style="margin-top:5px;">${q.goodElements.map(e=>`<span class="kw-ok">${esc(e)}</span>`).join("")}</div>`:""}</div>
+      </details>
+      <button class="btn btn-sm" onclick="getFB(${qi},'${ej(q.q)}','${ej(q.hint||"")}')">✦ Get Feedback</button>
+      <div id="fb-${qi}"></div>
+    </div>`).join("")}</div>`;
+  }catch(e){out.innerHTML=`<div class="card" style="color:var(--red);">${esc(e.message)}</div>`;}
+}
+async function getFB(qi,question,hint){
+  const ans=document.getElementById("an-"+qi)?.value.trim();
+  if(!ans){toast("Write your answer first","warn");return;}
+  const area=document.getElementById("fb-"+qi);
+  area.innerHTML=`<div style="font-size:12px;color:var(--text2);padding:5px 0;">Analyzing...</div>`;
+  try{
+    const resp=await ai(`Question:"${question}"\nLooking for:"${hint}"\nAnswer:"${ans}"\nReturn ONLY JSON:{"score":75,"strengths":["s"],"improvements":["i"],"closingSuggestion":"better ending"}`,700);
+    let r;try{r=JSON.parse(resp);}catch{const m=resp.match(/\{[\s\S]*\}/);if(m)r=JSON.parse(m[0]);else throw new Error("Parse failed");}
+    const col=r.score>=70?"var(--green)":r.score>=50?"var(--yellow)":"var(--red)";
+    area.innerHTML=`<div style="border-top:1px solid var(--border);margin-top:9px;padding-top:9px;">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px;"><span style="font-weight:600;color:${col};">${r.score}/100</span><div class="fb" style="flex:1;max-width:120px;"><div class="ff" style="width:${r.score}%;background:${col};"></div></div></div>
+      ${(r.strengths||[]).map(s=>`<div style="font-size:12px;color:var(--green);margin-bottom:2px;">✓ ${esc(s)}</div>`).join("")}
+      ${(r.improvements||[]).map(s=>`<div style="font-size:12px;color:var(--yellow);margin-bottom:2px;">↑ ${esc(s)}</div>`).join("")}
+      ${r.closingSuggestion?`<div style="background:var(--blue-bg);border-radius:var(--r);padding:7px 10px;font-size:12px;margin-top:5px;color:var(--text2);font-style:italic;">"${esc(r.closingSuggestion)}"</div>`:""}
+    </div>`;
+  }catch(e){area.innerHTML=`<div style="font-size:12px;color:var(--red);">${esc(e.message)}</div>`;}
+}
+function practiceQ(idx){
+  const q=ivLoad()[idx];if(!q)return;
+  showModal(`<div style="font-size:15px;font-weight:600;margin-bottom:12px;">Practice — ${esc(q.company)}</div>
+  <div style="background:var(--surface2);border-radius:var(--r);padding:10px;margin-bottom:12px;"><div style="display:flex;gap:5px;margin-bottom:5px;"><span class="tag tb">${esc(q.company)}</span><span class="tag ty">${esc(q.type)}</span></div><div style="font-weight:500;">${esc(q.question)}</div></div>
+  <label class="lb">Your answer</label><textarea id="prac-ans" rows="7" placeholder="Use STAR method for behavioral questions..."></textarea>
+  <div class="btn-row"><button class="btn btn-p" onclick="pracFB('${ej(q.question)}','${ej(q.hint||"")}')">✦ Get Feedback</button><button class="btn" onclick="closeModal()">Close</button></div>
+  <div id="prac-fb"></div>`);
+}
+async function pracFB(question,hint){
+  const ans=document.getElementById("prac-ans")?.value.trim();
+  if(!ans){toast("Write your answer first","warn");return;}
+  const area=document.getElementById("prac-fb");area.innerHTML=`<div style="font-size:12px;color:var(--text2);padding:9px 0;">Analyzing...</div>`;
+  try{
+    const resp=await ai(`Question:"${question}"\nLooking for:"${hint}"\nAnswer:"${ans}"\nReturn ONLY JSON:{"score":75,"strengths":["s"],"improvements":["i"],"closingSuggestion":"better ending"}`,700);
+    let r;try{r=JSON.parse(resp);}catch{const m=resp.match(/\{[\s\S]*\}/);if(m)r=JSON.parse(m[0]);else throw new Error("Parse failed");}
+    const col=r.score>=70?"var(--green)":r.score>=50?"var(--yellow)":"var(--red)";
+    area.innerHTML=`<div style="border-top:1px solid var(--border);margin-top:10px;padding-top:10px;"><div style="font-weight:600;font-size:14px;color:${col};margin-bottom:7px;">${r.score}/100</div>
+    ${(r.strengths||[]).map(s=>`<div style="font-size:13px;color:var(--green);margin-bottom:3px;">✓ ${esc(s)}</div>`).join("")}
+    ${(r.improvements||[]).map(s=>`<div style="font-size:13px;color:var(--yellow);margin-bottom:3px;">↑ ${esc(s)}</div>`).join("")}
+    ${r.closingSuggestion?`<div style="background:var(--blue-bg);border-radius:var(--r);padding:9px;font-size:13px;margin-top:7px;color:var(--text2);font-style:italic;">"${esc(r.closingSuggestion)}"</div>`:""}
+    </div>`;
+  }catch(e){area.innerHTML=`<div style="font-size:12px;color:var(--red);">${esc(e.message)}</div>`;}
+}
+
+function renderTips(){
+  const areas=["Satellite Flight Software","RTOS / Real-Time Systems","FPGA / VHDL","Fault Tolerance / Radiation","Attitude Control / AOCS","Research Interviews","General Aerospace"];
+  return`<div style="font-size:13px;color:var(--text2);margin-bottom:12px;">Select an area to get AI-generated interview preparation tips.</div>
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">${areas.map(a=>`<button class="btn" onclick="getAreaTips('${ej(a)}')">${esc(a)}</button>`).join("")}</div>
+  <div id="tips-out"></div>`;
+}
+async function getAreaTips(area){
+  const out=document.getElementById("tips-out");if(!out)return;
+  out.innerHTML=loading("Generating tips...");
+  try{
+    const resp=await ai(`Interview prep tips for "${area}" for aerospace students applying to ESA, CNES, NASA, Airbus D&S, Planet Labs, SpaceX.
+Return ONLY JSON:{"area":"","conceptsToReview":["c"],"typicalQuestions":["q"],"howToFrame":["tip"],"redFlags":["avoid"]}`,1500);
+    let r;try{r=JSON.parse(resp);}catch{const m=resp.match(/\{[\s\S]*\}/);if(m)r=JSON.parse(m[0]);else throw new Error("Parse failed");}
+    out.innerHTML=`<div class="card"><div style="font-weight:600;font-size:15px;margin-bottom:12px;">${esc(r.area)}</div>
+      <div style="margin-bottom:10px;"><span class="sl">Concepts to review</span><div class="kw-wrap">${(r.conceptsToReview||[]).map(x=>`<span class="tag tb">${esc(x)}</span>`).join("")}</div></div>
+      <div style="margin-bottom:10px;"><span class="sl">Typical questions</span>${(r.typicalQuestions||[]).map(x=>`<div style="font-size:13px;color:var(--text2);padding:3px 0;border-bottom:1px solid var(--border);">❓ ${esc(x)}</div>`).join("")}</div>
+      <div style="margin-bottom:10px;"><span class="sl">How to frame your experience</span>${(r.howToFrame||[]).map(x=>`<div style="font-size:13px;color:var(--text2);padding:2px 0;">✅ ${esc(x)}</div>`).join("")}</div>
+      <div><span class="sl">Red flags — avoid these</span>${(r.redFlags||[]).map(x=>`<div style="font-size:13px;color:var(--yellow);padding:2px 0;">⚠ ${esc(x)}</div>`).join("")}</div>
+    </div>`;
+  }catch(e){out.innerHTML=`<div style="color:var(--red);">${esc(e.message)}</div>`;}
+}
+
+function submitModal(){
+  showModal(`<div style="font-size:15px;font-weight:600;margin-bottom:12px;">Submit an Interview Question</div>
+  <div style="background:var(--yellow-bg);border:1px solid rgba(234,179,8,.2);border-radius:var(--r);padding:9px 11px;margin-bottom:12px;font-size:12px;color:var(--yellow);">⏳ Reviewed by admin before appearing publicly.</div>
+  <label class="lb">Your name (optional)</label><input id="s-name" placeholder="Anonymous">
+  <label class="lb">Company *</label><input id="s-co" placeholder="e.g. ESA, Planet Labs, Airbus, CNES...">
+  <label class="lb">Role applied for</label><input id="s-ro" placeholder="e.g. Embedded Systems Engineer">
+  <label class="lb">Question type *</label><select id="s-ty" style="margin-bottom:10px;"><option value="technical">Technical</option><option value="behavioral">Behavioral</option><option value="motivational">Motivational</option></select>
+  <label class="lb">The question (exactly as asked) *</label><textarea id="s-q" rows="3" placeholder="Write the question..."></textarea>
+  <label class="lb">Context (format, stage, duration)</label><input id="s-ctx" placeholder="e.g. 1st technical round, 45 min">
+  <label class="lb">Sample answer / approach</label><textarea id="s-ans" rows="4" placeholder="How did you answer this?"></textarea>
+  <label class="lb">Tips for others</label><input id="s-tip" placeholder="Key insight to answer well...">
+  <div class="btn-row" style="margin-top:8px;"><button class="btn btn-p" style="flex:1;justify-content:center;" onclick="submitQ()">↗ Submit for Review</button><button class="btn" onclick="closeModal()">Cancel</button></div>`);
+}
+function submitQ(){
+  const co=document.getElementById("s-co")?.value.trim();const q=document.getElementById("s-q")?.value.trim();
+  if(!co||!q){toast("Company and question required","warn");return;}
+  const p=pendLoad();
+  p.push({id:"q"+Date.now(),company:co,question:q,role:document.getElementById("s-ro")?.value.trim()||"",type:document.getElementById("s-ty")?.value||"technical",context:document.getElementById("s-ctx")?.value.trim()||"",sampleAnswer:document.getElementById("s-ans")?.value.trim()||"",tips:document.getElementById("s-tip")?.value.trim()||"",submittedBy:document.getElementById("s-name")?.value.trim()||"Anonymous",submittedAt:new Date().toISOString()});
+  pendSave(p); closeModal(); toast("Submitted! Pending admin review.","info");
+}
+
+/* ─────────────────────────────────────────────
+   ADMIN TAB
+───────────────────────────────────────────── */
+function pageAD(){
+  document.getElementById("content").innerHTML=`<div style="font-size:16px;font-weight:600;margin-bottom:14px;">Admin Panel</div>
+  ${!adminOk?`<div class="card" style="max-width:360px;"><span class="sl">Admin Access</span><label class="lb">Password</label><input id="pw" type="password" placeholder="Enter admin password"><button class="btn btn-p" onclick="unlock()">🔓 Unlock</button></div>`:`<div id="ad-body"></div>`}`;
+  if(adminOk) loadAdminBody();
+}
+function unlock(){ const pw=document.getElementById("pw")?.value; if(pw===ADMIN_PW){adminOk=true;pageAD();}else toast("Wrong password","warn"); }
+function loadAdminBody(){
+  const p=pendLoad(),a=ivLoad(),body=document.getElementById("ad-body");if(!body)return;
+  body.innerHTML=`<div style="display:flex;gap:10px;margin-bottom:14px;max-width:260px;">
+    <div class="stat"><div class="sv" style="color:var(--yellow);">${p.length}</div><div class="sl2">Pending</div></div>
+    <div class="stat"><div class="sv" style="color:var(--green);">${a.length}</div><div class="sl2">Approved</div></div>
+  </div>
+  ${p.length?`<div style="font-weight:600;font-size:14px;margin-bottom:8px;">Pending Review</div>
+  ${p.map((q,i)=>`<div class="card-sm" style="margin-bottom:8px;"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;">
+    <div style="flex:1;"><div style="display:flex;gap:4px;margin-bottom:4px;flex-wrap:wrap;"><span class="tag ty">Pending</span><span class="tag tb">${esc(q.company)}</span><span class="tag tp">${esc(q.type)}</span></div><div style="font-weight:500;margin-bottom:3px;">${esc(q.question)}</div>${q.sampleAnswer?`<div style="font-size:12px;color:var(--text2);">${esc(q.sampleAnswer)}</div>`:""}<div style="font-size:11px;color:var(--text3);margin-top:3px;">by ${esc(q.submittedBy)} · ${new Date(q.submittedAt).toLocaleDateString()}</div></div>
+    <div class="btn-row"><button class="btn btn-sm btn-ok" onclick="approveQ(${i})">✓</button><button class="btn btn-sm btn-d" onclick="rejectQ(${i})">✗</button></div>
+  </div></div>`).join("")}`:`<div style="color:var(--text3);margin-bottom:14px;">No pending submissions.</div>`}
+  ${a.length?`<hr class="div"><div style="font-weight:600;font-size:14px;margin-bottom:8px;">Approved (${a.length})</div>
+  ${a.map((q,i)=>`<div class="entry" style="margin-bottom:5px;"><div class="ehd"><div style="flex:1;"><div style="display:flex;gap:4px;margin-bottom:2px;"><span class="tag tg">Live</span><span class="tag tb">${esc(q.company)}</span></div><div style="font-size:13px;">${esc(q.question)}</div></div><button class="btn btn-sm btn-d" onclick="removeQ(${i})">🗑</button></div></div>`).join("")}`:""}`;
+}
+function approveQ(i){ const p=pendLoad(),q=p[i]; if(!q)return; const a=ivLoad(); a.push(q); p.splice(i,1); ivSave(a); pendSave(p); toast("Approved!","info"); loadAdminBody(); }
+function rejectQ(i){ const p=pendLoad(); p.splice(i,1); pendSave(p); toast("Rejected"); loadAdminBody(); }
+function removeQ(i){ if(!confirm("Remove?"))return; const a=ivLoad(); a.splice(i,1); ivSave(a); loadAdminBody(); }
+
+/* ─────────────────────────────────────────────
+   UTILITIES
+───────────────────────────────────────────── */
+async function ai(prompt, max=1000){
+  const r = await fetch(AI_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:AI_MODEL,max_tokens:max,messages:[{role:"user",content:prompt}]})});
+  const d = await r.json();
+  if(d.error) throw new Error(d.error.message||"API error");
+  return (d.content||[]).map(i=>i.text||"").join("");
+}
+function esc(s){ if(s==null)return""; return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"); }
+function ej(s){ if(s==null)return""; return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g,"\\n"); }
+function cpEl(id){ const el=document.getElementById(id); if(el) navigator.clipboard.writeText(el.value||el.textContent).then(()=>toast("Copied!")); }
+function loading(msg){ return `<div style="text-align:center;padding:48px 20px;color:var(--text2);font-size:13px;"><div style="margin-bottom:8px;font-size:20px;">⏳</div>${esc(msg)}</div>`; }
+function showModal(h){ document.getElementById("mbox").innerHTML=h; document.getElementById("mbg").style.display="flex"; }
+function closeModal(){ document.getElementById("mbg").style.display="none"; }
+let _tt;
+function toast(msg,type="info"){ const el=document.getElementById("toast"); el.textContent=msg; el.style.borderColor=type==="info"?"var(--accent2)":type==="warn"?"var(--yellow)":"var(--border2)"; el.classList.add("show"); clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove("show"),2600); }
+
+/* ─────────────────────────────────────────────
+   INIT
+───────────────────────────────────────────── */
+DB = LS.g("acp4_db") || JSON.parse(JSON.stringify(SEED));
+nav();
+render();
+</script>
+</body>
+</html>
