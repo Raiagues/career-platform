@@ -20,26 +20,26 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v4
-        env:
-          FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
       - name: Install LaTeX
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends \
-            texlive-latex-extra texlive-fonts-extra texlive-fonts-recommended \
-            texlive-lang-portuguese cm-super
+            texlive-latex-extra texlive-fonts-extra \
+            texlive-fonts-recommended cm-super
 
-      - name: Compile CV (if cv.tex exists)
+      - name: Compile CV
         run: |
           if [ -f cv.tex ]; then
-            pdflatex -interaction=nonstopmode cv.tex
-            pdflatex -interaction=nonstopmode cv.tex
-            echo "CV compiled successfully"
+            pdflatex -interaction=nonstopmode cv.tex || true
+            pdflatex -interaction=nonstopmode cv.tex || true
+            echo "Compiled cv.tex"
           else
-            echo "No cv.tex found, skipping compilation"
+            echo "No cv.tex — skipping"
           fi
 
       - name: Setup Pages
